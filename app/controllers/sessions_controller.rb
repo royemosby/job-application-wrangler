@@ -22,7 +22,7 @@ class SessionsController < ApplicationController
     else
       @user = User.find_or_create_by(gh_uid: auth['uid']) do |u|
         u.username = auth['info']['nickname']
-          u.gh_email = auth['info']['email']
+          u.email = auth['info']['email']
           u.password = SecureRandom.base64(12)
       end
       session[:user_id] = @user.id
