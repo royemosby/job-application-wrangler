@@ -11,6 +11,7 @@ class CreateJobs < ActiveRecord::Migration[7.0]
       t.string :logo_url
       t.date :date_posted
       t.string :description
+      t.references :user, null: false, foreign_key: true
 
       t.timestamps
     end
