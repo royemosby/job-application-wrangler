@@ -10,5 +10,5 @@ Rails.application.routes.draw do
   get "/auth/github/callback" => "sessions#create"
   post "/logout", to: "session#destroy"
   
-  root "users#index"
+  root "sessions#new"
 end
