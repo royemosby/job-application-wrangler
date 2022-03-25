@@ -4,7 +4,7 @@ RSpec.describe "jobs/edit", type: :view do
   before(:each) do
     @job = assign(:job, Job.create!(
       title: "MyString",
-      type: "",
+      job_type: "",
       company: "MyString",
       location: "MyString",
       is_remote: "MyString",
@@ -22,7 +22,7 @@ RSpec.describe "jobs/edit", type: :view do
 
       assert_select "input[name=?]", "job[title]"
 
-      assert_select "input[name=?]", "job[type]"
+      assert_select "input[name=?]", "job[job_type]"
 
       assert_select "input[name=?]", "job[company]"
 

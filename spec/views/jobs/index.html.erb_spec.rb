@@ -5,7 +5,7 @@ RSpec.describe "jobs/index", type: :view do
     assign(:jobs, [
       Job.create!(
         title: "Title",
-        type: "Type",
+        job_type: "Job Type",
         company: "Company",
         location: "Location",
         is_remote: "Is Remote",
@@ -16,7 +16,7 @@ RSpec.describe "jobs/index", type: :view do
       ),
       Job.create!(
         title: "Title",
-        type: "Type",
+        job_type: "Job Type",
         company: "Company",
         location: "Location",
         is_remote: "Is Remote",
@@ -31,7 +31,7 @@ RSpec.describe "jobs/index", type: :view do
   it "renders a list of jobs" do
     render
     assert_select "tr>td", text: "Title".to_s, count: 2
-    assert_select "tr>td", text: "Type".to_s, count: 2
+    assert_select "tr>td", text: "Job Type".to_s, count: 2
     assert_select "tr>td", text: "Company".to_s, count: 2
     assert_select "tr>td", text: "Location".to_s, count: 2
     assert_select "tr>td", text: "Is Remote".to_s, count: 2

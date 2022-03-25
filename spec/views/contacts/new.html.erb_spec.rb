@@ -5,7 +5,7 @@ RSpec.describe "contacts/new", type: :view do
     assign(:contact, Contact.new(
       first_name: "MyString",
       last_name: "MyString",
-      type: "",
+      contact_type: "",
       email: "MyString",
       url: "MyString",
       phone: "MyString",
@@ -22,7 +22,7 @@ RSpec.describe "contacts/new", type: :view do
 
       assert_select "input[name=?]", "contact[last_name]"
 
-      assert_select "input[name=?]", "contact[type]"
+      assert_select "input[name=?]", "contact[contact_type]"
 
       assert_select "input[name=?]", "contact[email]"
 

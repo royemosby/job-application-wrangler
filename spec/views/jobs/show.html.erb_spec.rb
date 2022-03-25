@@ -4,7 +4,7 @@ RSpec.describe "jobs/show", type: :view do
   before(:each) do
     @job = assign(:job, Job.create!(
       title: "Title",
-      type: "Type",
+      job_type: "Job Type",
       company: "Company",
       location: "Location",
       is_remote: "Is Remote",
@@ -18,7 +18,7 @@ RSpec.describe "jobs/show", type: :view do
   it "renders attributes in <p>" do
     render
     expect(rendered).to match(/Title/)
-    expect(rendered).to match(/Type/)
+    expect(rendered).to match(/Job Type/)
     expect(rendered).to match(/Company/)
     expect(rendered).to match(/Location/)
     expect(rendered).to match(/Is Remote/)
