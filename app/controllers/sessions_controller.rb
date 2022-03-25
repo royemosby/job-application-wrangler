@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
   def new
     if session[:user_id]
       @user = User.find_by(id: session[:user_id])
-      redirect_to "/", notice: "You are already logged on, #{@user.username}."
+      redirect_to "/jobs", notice: "You are already logged on, #{@user.username}."
     else
       @user = User.new
     end
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
       if @user = User.find_by(username: params[:username])
         if @user.authenticate(params[:password])
           session[:user_id] = @user.id
-          redirect_to "/", success: "You have logged on, #{@user.username}"
+          redirect_to "/jobs", success: "You have logged on, #{@user.username}"
         end
       end
     else
@@ -26,14 +26,14 @@ class SessionsController < ApplicationController
           u.password = SecureRandom.base64(12)
       end
       session[:user_id] = @user.id
-      redirect_to "/", success: "You have been logged on, #{@user.username}."
+      redirect_to "/jobs", success: "You have been logged on, #{@user.username}."
     end
   end
 
   def destroy
     if session[:user_id]
       session.delete :user_id
-      redirect_to "/", notice: "You have successfully logged out"
+      redirect_to "/login", notice: "You have successfully logged out"
     end
   end
 
