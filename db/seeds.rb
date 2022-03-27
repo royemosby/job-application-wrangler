@@ -1,7 +1,82 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+def f_first_name
+  Faker::Name::first_name
+end
+
+def f_last_name
+  Faker::Name::last_name
+end
+
+def f_gh_uid
+  Faker::Internet.uuid
+end
+
+def f_username(first, last)
+  first + "-" + last
+end
+
+def f_email(first, last)
+  Faker::Internet.safe_email(name: "#{}.chars.first+ #{last}")
+end
+
+@job_types = %w(front-end back-end full-stack other)
+@is_remote = %w(yes no hybrid)
+@contact_type = ["recruiter", "personal", "peer", "manager", "employee", "flatiron alumni", "other"]
+
+def create_job(user)
+  Job.create!(
+    user: user,
+    title: Faker::Job.title,
+    job_type: @job_types[rand(4)],
+    company: Faker::Company.name,
+    is_remote: @is_remote[rand(3)],
+    posting_url: Faker::Internet.url,
+    status: "new",
+    date_posted: Faker::Date.between(from: '2022-01-01', to: '2022-03-25'),
+    description: Faker::TvShows::DrWho.quote
+  )
+end
+
+def create_contact(user, job = nil)
+  first = f_first_name
+  last = f_last_name
+  contact = Contact.create!(
+    user: user,
+    first_name: first,
+    last_name: last,
+    contact_type: @contact_type[rand(7)],
+    email: f_email(first, last),
+    url: Faker::Internet.url,
+    phone: "345-345-2345",
+    notes: Faker::TvShows::DrWho.quote
+  )
+  if job
+    contact.jobs << job
+  end
+end
+
+
+def create_user
+  first = f_first_name
+  last = f_last_name
+  username = f_username(first, last)
+  gh_uid = f_gh_uid
+  email = f_email(first, last)
+  User.create!(
+    username: username,
+    password: "password",
+    gh_uid: gh_uid,
+    email: email
+  )
+end
+
+5.times do
+  user = create_user
+  3.times do
+    create_job(user)
+    create_contact(user)
+  end
+  2.times do
+    job = create_job(user)
+    create_contact(user, job)
+  end
+end
