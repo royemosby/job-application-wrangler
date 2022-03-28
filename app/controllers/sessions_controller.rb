@@ -21,14 +21,14 @@ class SessionsController < ApplicationController
       else
         redirect_to "/sessions#new", notice: "username not found and/or password was incorrect"
       end
-    else
-      @user = User.find_or_create_by(gh_uid: auth['uid']) do |u|
-        u.username = auth['info']['nickname']
-          u.email = auth['info']['email']
-          u.password = SecureRandom.base64(12)
-      end
-      session[:user_id] = @user.id
-      redirect_to "/jobs", success: "You have been logged on, #{@user.username}."
+    # else
+      # @user = User.find_or_create_by(gh_uid: auth['uid']) do |u|
+      #   u.username = auth['info']['nickname']
+      #     u.email = auth['info']['email']
+      #     u.password = SecureRandom.base64(12)
+      # end
+      # session[:user_id] = @user.id
+      # redirect_to "/jobs", success: "You have been logged on, #{@user.username}."
     end
   end
 
