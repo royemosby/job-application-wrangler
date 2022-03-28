@@ -1,5 +1,6 @@
 <h1 class="title">JAW Login</h1>
 <h2 class="title is-4">Log in with username/password</h2>
+<p style="color: green"><%= notice %></p>
 <%= form_tag "/login" do %>
   <div class="field">
     <%= label_tag "Username", nil, class: "label" %>
@@ -12,11 +13,13 @@
   <%= submit_tag :"Log in"%>
 <% end %>
 <hr>
+<!--
 <h2 class="title is-4"> Or choose from the options below:</h2>
 <br>
 <%= button_to 'Log in with GitHub', '/auth/github', method: :post%>
 <br>
 <br>
 <div>
+-->
 <%= link_to "Create New Account", new_user_path%>
 </div>
