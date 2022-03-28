@@ -1,10 +1,10 @@
 class ContactsController < ApplicationController
   before_action :logged_on
-  before_action :set_contact, only: %i[ show edit update destroy ]
+  before_action :set_contact, :redirect_forbidden, only: %i[ show edit update destroy ]
 
   # GET /contacts or /contacts.json
   def index
-    @contacts = Contact.all
+    @contacts = @user.contacts
   end
 
   # GET /contacts/1 or /contacts/1.json
@@ -59,13 +59,23 @@ class ContactsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_contact
-      @contact = Contact.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def contact_params
-      params.require(:contact).permit(:first_name, :last_name, :contact_type, :email, :url, :phone, :notes)
+  def redirect_forbidden
+    if @user != @contact.user
+      respond_to do |format|
+        format.html {redirect_to contacts_url, notice: "You are not authorized to view or change contacts that you did not create"}
+        format.json {render :index, status: :forbidden}
+      end
     end
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_contact
+    @contact = Contact.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def contact_params
+    params.require(:contact).permit(:first_name, :last_name, :contact_type, :email, :url, :phone, :notes)
+  end
 end
