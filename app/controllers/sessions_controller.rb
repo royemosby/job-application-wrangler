@@ -18,6 +18,8 @@ class SessionsController < ApplicationController
           session[:user_id] = @user.id
           redirect_to "/jobs", success: "You have logged on, #{@user.username}"
         end
+      else
+        redirect_to "/sessions#new", notice: "username not found and/or password was incorrect"
       end
     else
       @user = User.find_or_create_by(gh_uid: auth['uid']) do |u|
