@@ -52,19 +52,19 @@ class UsersController < ApplicationController
   end
 
   private
-  
+
   def set_user
     @user = User.find(session[:user_id])
   end
 
-    def redirect_forbidden
-      if session[:user_id] != params[:id].to_i
-        respond_to do |format|
-          format.html {redirect_to user_url(@user), notice: "You are not authorized to view or modify other users"}
-          format.json {render :index, status: :forbidden}
-        end
+  def redirect_forbidden
+    if session[:user_id] != params[:id].to_i
+      respond_to do |format|
+        format.html {redirect_to user_url(@user), notice: "You are not authorized to view or modify other users"}
+        format.json {render :index, status: :forbidden}
       end
     end
+  end
 
     def user_params
       params.require(:user).permit(:username, :email, :password, :password_confirmation)
