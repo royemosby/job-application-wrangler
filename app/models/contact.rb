@@ -23,6 +23,7 @@ class Contact < ApplicationRecord
   def validate_optional_phone
     if phone.present?
       # this isn't following NANP but good enough
+      # TODO: handle extensions w/format "x123.."
       unless !!phone.match(/\A(\d{3}-|\(\d{3}\))\d{3}-\d{4}\z/)
         errors.add :phone, 'phone must be empty or in the following formats: nnn-nnn-nnnn or (nnn)nnn-nnnn. Place international numbers in notes.'
       end
