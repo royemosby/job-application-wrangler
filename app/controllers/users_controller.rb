@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   before_action :logged_on
-  before_action :set_user, only: %i[ show edit update destroy ]
-  before_action :redirect_forbidden, only: %i[index show edit update destroy]
+  before_action :set_user, :redirect_forbidden, only: %i[index show edit update destroy ]
 
   def index
   end
