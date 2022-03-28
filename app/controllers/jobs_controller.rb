@@ -1,17 +1,14 @@
 class JobsController < ApplicationController
   before_action :logged_on
-  before_action :set_job, only: %i[ show edit update destroy ]
+  before_action :set_job, :redirect_forbidden, only: %i[ show edit update destroy ]
 
-  # GET /jobs or /jobs.json
   def index
-    @jobs = Job.all
+    @jobs = @user.jobs
   end
 
-  # GET /jobs/1 or /jobs/1.json
   def show
   end
 
-  # GET /jobs/new
   def new
     @job = Job.new
   end
@@ -59,13 +56,23 @@ class JobsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_job
-      @job = Job.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def job_params
-      params.require(:job).permit(:title, :job_type, :company, :location, :is_remote, :status, :posting_url, :logo_url, :date_posted, :description)
+  def redirect_forbidden
+    if @user != @job.user
+      respond_to do |format|
+        format.html {redirect_to jobs_url, notice: "You are not authorized to view or change jobs that you did not create"}
+        format.json {render :index, status: :forbidden}
+      end
     end
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_job
+    @job = Job.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def job_params
+    params.require(:job).permit(:title, :job_type, :company, :location, :is_remote, :status, :posting_url, :logo_url, :date_posted, :description)
+  end
 end
