@@ -314,6 +314,7 @@ DEPENDENCIES
   faker
   importmap-rails
   jbuilder
+  jwt
   listen (~> 3.3)
   omniauth
   omniauth-github!
