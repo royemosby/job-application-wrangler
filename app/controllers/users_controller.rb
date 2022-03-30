@@ -1,71 +1,42 @@
 class UsersController < ApplicationController
-  before_action :logged_on
-  before_action :set_user, :redirect_forbidden, only: %i[index show edit update destroy ]
-
-  def index
-  end
+  skip_before_action :authenticated?, only: %i[create]
 
   def show
-  end
-
-  def new
-    @user = User.new
-  end
-
-  def edit
+    if current_user === User.find(params[:id])
+      render  json: @user
+    else
+      render json: {message: "You are not allowed to view other users"}, status: :forbidden
+    end
   end
 
   def create
-    @user = User.new(user_params)
-
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to user_url(@user), notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
+    @user = User.create(user_params)
+    if @user.valid?
+      @token = encode_token({user_id: @user.id})
+      render json: {user: @user, jwt: @token}, status: :created
+    else
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    respond_to do |format|
+      debugger
       if @user.update(user_params)
-        format.html { redirect_to user_url(@user), notice: "User was successfully updated." }
-        format.json { render :show, status: :ok, location: @user }
+        render json: @user, status: :ok, location: @user
       else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        render json: @user.errors, status: :unprocessable_entity
       end
-    end
   end
 
+  #TODO: contruct confirmation flow for users that have existing jobs/contacts
   def destroy
     @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    render json: {message: "User was successfully destroyed."}, status: :no_content
   end
 
   private
 
-  def set_user
-    @user = User.find(session[:user_id])
-  end
-
-  def redirect_forbidden
-    if session[:user_id] != params[:id].to_i
-      respond_to do |format|
-        format.html {redirect_to user_url(@user), notice: "You are not authorized to view or modify other users"}
-        format.json {render :index, status: :forbidden}
-      end
-    end
-  end
-
     def user_params
-      params.require(:user).permit(:username, :email, :password, :password_confirmation)
+      params.require(:user).permit(:username, :email, :password)
     end
 end
