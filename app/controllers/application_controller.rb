@@ -1,14 +1,31 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
   add_flash_types :success
+  before_action :authenticated?
 
-  def current_user
-    @user = User.find_by(id: session[:user_id])
+  def encode_token(payload)
+    JWT.encode(payload, ENV["JWT_SECRET"])
   end
 
-  def logged_on
-    unless current_user
-      redirect_to "/", alert: "You have to be logged in to access that page."
+  def decode_auth_header
+    if payload = request.headers["Authorization"]
+      begin
+        JWT.decode(payload, ENV["JWT_SECRET"])
+      rescue JWT::VerificationError
+        nil
+      end
+    end
+  end
+
+  def current_user
+    if token = decode_auth_header
+      @user = User.find(token[0]['user_id'])
+    end
+  end
+
+  def authenticated?
+    unless !!current_user
+      render json: {message: "Please log in", status: :unauthorized}
     end
   end
 end
