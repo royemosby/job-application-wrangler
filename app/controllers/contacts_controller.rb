@@ -1,80 +1,60 @@
 class ContactsController < ApplicationController
-  before_action :logged_on
-  before_action :set_contact, :redirect_forbidden, only: %i[ show edit update destroy ]
+  before_action :authenticated?
+  before_action :own_contact?, only: %i[ show update destroy ]
 
-  # GET /contacts or /contacts.json
   def index
     @contacts = @user.contacts
+    render json: @contacts
   end
 
-  # GET /contacts/1 or /contacts/1.json
   def show
+    render json: @contact
   end
 
-  # GET /contacts/new
-  def new
-    @contact = Contact.new
-  end
-
-  # GET /contacts/1/edit
-  def edit
-  end
-
-  # POST /contacts or /contacts.json
   def create
     @contact = Contact.new(contact_params)
     @contact.user = @user
-    respond_to do |format|
-      if @contact.save
-        format.html { redirect_to contact_url(@contact), notice: "Contact was successfully created." }
-        format.json { render :show, status: :created, location: @contact }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
-      end
+    if @contact.save
+      render json: @contact, status: :created
+    else
+      render json: @contact.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /contacts/1 or /contacts/1.json
   def update
-    respond_to do |format|
-      if @contact.update(contact_params)
-        format.html { redirect_to contact_url(@contact), notice: "Contact was successfully updated." }
-        format.json { render :show, status: :ok, location: @contact }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @contact.errors, status: :unprocessable_entity }
-      end
+    if @contact.update(contact_params)
+      render json: @contact
+    else
+      render json: @contact.errors, status: :unprocessable_entity
     end
   end
 
-  # DELETE /contacts/1 or /contacts/1.json
   def destroy
     @contact.destroy
-
-    respond_to do |format|
-      format.html { redirect_to contacts_url, notice: "Contact was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    render json: {message: "Contact was succesfully destroyed."}
   end
 
   private
 
-  def redirect_forbidden
-    if @user != @contact.user
-      respond_to do |format|
-        format.html {redirect_to contacts_url, notice: "You are not authorized to view or change contacts that you did not create"}
-        format.json {render :index, status: :forbidden}
+  #explicit bool returns since this method is evaluated in own_contact?
+  def set_contact
+    @contact = Contact.find_by(id: params[:id])
+    if !@contact
+      render json: {message: "not found"}, status: :not_found
+      false
+    else
+      true
+    end
+  end
+
+  def own_contact?
+    if set_contact
+      if current_user != @contact.user
+        render json: {message: "You are not authorized to access contacts that you did not create"}, status: :forbidden
       end
     end
   end
 
-  # Use callbacks to share common setup or constraints between actions.
-  def set_contact
-    @contact = Contact.find(params[:id])
-  end
-
-  # Only allow a list of trusted parameters through.
   def contact_params
     params.require(:contact).permit(:first_name, :last_name, :contact_type, :email, :url, :phone, :notes, :user_id)
   end

@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
   skip_before_action :authenticated?, only: %i[create]
 
+  def index
+    render json: {message: "You are not allowed to view other users"}, status: :forbidden
+  end
+
   def show
     if current_user === User.find(params[:id])
       render  json: @user
@@ -20,7 +24,6 @@ class UsersController < ApplicationController
   end
 
   def update
-      debugger
       if @user.update(user_params)
         render json: @user, status: :ok, location: @user
       else
@@ -30,8 +33,19 @@ class UsersController < ApplicationController
 
   #TODO: contruct confirmation flow for users that have existing jobs/contacts
   def destroy
-    @user.destroy
-    render json: {message: "User was successfully destroyed."}, status: :no_content
+    if current_user === User.find(params[:id])
+      if @user.destroy
+        render json: {message: "User was successfully destroyed."}, status: :no_content
+      else
+        render json: {message: "There are still jobs associated with this user."}, status: :locked
+      end
+    else
+      if User.find(params[:id])
+        render json: {message: "You are not allowed to delete other users"}, status: :forbidden
+      else
+        render json: {message: "not found"}, status: :not_found
+      end
+    end
   end
 
   private
