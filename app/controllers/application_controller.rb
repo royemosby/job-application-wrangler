@@ -1,6 +1,4 @@
-class ApplicationController < ActionController::Base
-  protect_from_forgery with: :null_session
-  add_flash_types :success
+class ApplicationController < ActionController::API
   before_action :authenticated?
 
   def encode_token(payload)
