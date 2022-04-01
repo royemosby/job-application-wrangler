@@ -4,18 +4,18 @@ class JobsController < ApplicationController
 
   def index
     @jobs = @user.jobs
-    render json: @jobs
+    render json: JobSerializer.new(@jobs)
   end
 
   def show
-    render json: @job
+    render json: JobSerializer.new(@job)
   end
 
   def create
     @job = Job.new(job_params)
     @job.user = @user
     if @job.save
-      render json: @job, status: :created
+      render json: JobSerializer.new(@job), status: :created
     else
       render json: @job.errors, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class JobsController < ApplicationController
 
   def update
     if @job.update(job_params)
-      render json: @job
+      render json: JobSerializer.new(@job)
     else
       render json: @job.errors, status: :unprocessable_entity
     end

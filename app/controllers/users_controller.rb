@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   def show
     if current_user === User.find(params[:id])
-      render  json: @user
+      render  json: UserSerializer.new(@user)
     else
       render json: {message: "You are not allowed to view other users"}, status: :forbidden
     end
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     @user = User.create(user_params)
     if @user.valid?
       @token = encode_token({user_id: @user.id})
-      render json: {user: @user, jwt: @token}, status: :created
+      render json: {user: UserSerializer.new(@user), jwt: @token}, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
   def update
       if @user.update(user_params)
-        render json: @user, status: :ok, location: @user
+        render json: UserSerializer.new(@user), status: :ok, location: @user
       else
         render json: @user.errors, status: :unprocessable_entity
       end

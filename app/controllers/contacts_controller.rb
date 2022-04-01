@@ -4,7 +4,7 @@ class ContactsController < ApplicationController
 
   def index
     @contacts = @user.contacts
-    render json: @contacts
+    render json: ContactSerializer.new(@contacts)
   end
 
   def show
@@ -15,7 +15,7 @@ class ContactsController < ApplicationController
     @contact = Contact.new(contact_params)
     @contact.user = @user
     if @contact.save
-      render json: @contact, status: :created
+      render json: ContactSerializer.new(@contact), status: :created
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class ContactsController < ApplicationController
 
   def update
     if @contact.update(contact_params)
-      render json: @contact
+      render json: ContactSerializer.new(@contact)
     else
       render json: @contact.errors, status: :unprocessable_entity
     end
