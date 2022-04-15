@@ -11,6 +11,7 @@ class JobSerializer
               :logo_url,
               :date_posted,
               :description,
+              :notes,
               :date_applied
 
   attribute :updated_at do |obj|
