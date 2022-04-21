@@ -8,7 +8,7 @@ class ContactsController < ApplicationController
   end
 
   def show
-    render json: @contact
+    render json: ContactSerializer.new(@contact)
   end
 
   def create
