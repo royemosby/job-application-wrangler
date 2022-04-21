@@ -6,9 +6,10 @@ class ApplicationController < ActionController::API
   end
 
   def decode_auth_header
-    if payload = request.headers["Authorization"]
+    if auth_header = request.headers["Authorization"]
+      token = auth_header.split(' ')[1]
       begin
-        JWT.decode(payload, ENV["JWT_SECRET"])
+        JWT.decode(token, ENV["JWT_SECRET"])
       rescue JWT::VerificationError
         nil
       end
