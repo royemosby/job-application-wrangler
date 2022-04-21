@@ -1,7 +1,8 @@
 class JobSerializer
   include JSONAPI::Serializer
 
-  attributes :title,
+  attributes  :id,
+              :title,
               :job_type,
               :company,
               :location,
@@ -12,7 +13,8 @@ class JobSerializer
               :date_posted,
               :description,
               :notes,
-              :date_applied
+              :date_applied,
+              :contact_id
 
   attribute :updated_at do |obj|
     {date: obj.updated_at.strftime("%F"),
