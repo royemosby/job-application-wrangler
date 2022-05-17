@@ -8,7 +8,7 @@ class Job < ApplicationRecord
   validates :company, presence: true
   validates :date_posted, presence: true
   validates :is_remote, presence: true
-  validates :is_remote, inclusion: {in: ["yes", "no", "hybrid"]}
+  validates :is_remote, inclusion: {in: ["remote", "in-person", "hybrid"]}
   validates :logo_url, url: {allow_blank: true}
   validates :posting_url, url: {allow_blank: true}
   validates :status, presence: true
