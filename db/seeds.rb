@@ -47,7 +47,7 @@ def create_contact(user, job = nil)
     last_name: last,
     contact_type: @contact_type[rand(7)],
     email: f_email(first, last),
-    url: Faker::Internet.url,
+    social_url: Faker::Internet.url,
     phone: "345-345-2345",
     notes: Faker::TvShows::DrWho.quote
   )

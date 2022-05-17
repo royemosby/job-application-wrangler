@@ -7,7 +7,7 @@ class Contact < ApplicationRecord
   validates :last_name, presence: true
   validates :contact_type, presence: true
   validates :contact_type, inclusion: {in: ["recruiter", "personal", "peer", "manager", "employee", "flatiron alumni", "other"]}
-  validates :url, url: {allow_blank: true}
+  validates :social_url, url: {allow_blank: true}
 
   validate :validate_optional_email,
     :validate_optional_phone

@@ -6,7 +6,7 @@ class ContactSerializer
               :last_name,
               :contact_type,
               :email,
-              :url,
+              :social_url,
               :phone,
               :notes
 
