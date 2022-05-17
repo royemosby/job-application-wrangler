@@ -19,7 +19,7 @@ def f_email(first, last)
 end
 
 @job_types = %w(front-end back-end full-stack other)
-@is_remote = %w(yes no hybrid)
+@is_remote = ["remote", "in-person", "hybrid"]
 @contact_type = ["recruiter", "personal", "peer", "manager", "employee", "flatiron alumni", "other"]
 
 def create_job(user)
