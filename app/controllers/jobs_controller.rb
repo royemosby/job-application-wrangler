@@ -17,7 +17,7 @@ class JobsController < ApplicationController
     if @job.save
       render json: JobSerializer.new(@job), status: :created
     else
-      render json: @job.errors, status: :unprocessable_entity
+      render json: {errors: @job.errors}, status: :unprocessable_entity
     end
   end
 
@@ -25,7 +25,7 @@ class JobsController < ApplicationController
     if @job.update(job_params)
       render json: JobSerializer.new(@job)
     else
-      render json: @job.errors, status: :unprocessable_entity
+      render json: {errors: @job.errors}, status: :unprocessable_entity
     end
   end
 

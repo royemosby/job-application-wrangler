@@ -17,7 +17,7 @@ class ContactsController < ApplicationController
     if @contact.save
       render json: ContactSerializer.new(@contact), status: :created
     else
-      render json: @contact.errors, status: :unprocessable_entity
+      render json: {errors: @contact.errors}, status: :unprocessable_entity
     end
   end
 
@@ -25,7 +25,7 @@ class ContactsController < ApplicationController
     if @contact.update(contact_params)
       render json: ContactSerializer.new(@contact)
     else
-      render json: @contact.errors, status: :unprocessable_entity
+      render json: {errors: @contact.errors}, status: :unprocessable_entity
     end
   end
 
